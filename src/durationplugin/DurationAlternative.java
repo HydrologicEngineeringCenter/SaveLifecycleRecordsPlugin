@@ -12,8 +12,6 @@ import hec.heclib.dss.HecDSSDataAttributes;
 import hec.io.DSSIdentifier;
 import hec.io.TimeSeriesContainer;
 import hec2.model.DataLocation;
-import hec2.model.DataLocationComputeType;
-import hec2.model.DssDataLocation;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import hec2.wat.model.tracking.OutputVariableImpl;
@@ -81,104 +79,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
             return false;
         }
     }
-    public static DataLocation createDataLocation(Element dlElem)
-    {
-            if ( dlElem == null )
-            {
-                    return null;
-            }
-            String clsName = dlElem.getAttributeValue("Class");
-            if ( clsName == null )
-            {
-                    clsName = DataLocation.class.getName();
-            }
-            return createDataLocation(clsName);
 
-    }
-    /**
-     * @param cls
-     * @return
-     */
-    private static DataLocation createDataLocation(String clsName) {
-            Class cls;
-            try
-            {
-                    cls = Class.forName(clsName);
-            }
-            catch (ClassNotFoundException e)
-            {
-                    System.out.println("createDataLocation:failed to find class "+clsName
-                                    +" Error:"+e);
-                    return new DataLocation();
-            }
-
-            Object obj;
-            try
-            {
-                    obj = cls.newInstance();
-                    if ( obj instanceof DataLocation )
-                    {
-                            return (DataLocation)obj;
-                    }
-            }
-            catch (InstantiationException | IllegalAccessException e)
-            {
-                    System.out.println("createDataLocation: error creating DataLocation "+clsName
-                                    +" Error:"+e);
-            }
-            //default return something.
-            return new DataLocation();
-    }
-    @Override
-    protected void loadDataLocations(Element root, List<DataLocation> inputDataLocations){
-        Element dlElem = root.getChild("DataLocations");
-        if ( dlElem != null )
-        {
-                List<?> kids = dlElem.getChildren();
-                Element child;
-                String name, model, param, path, cls, computeType, desc;
-                DataLocation dndl;
-                DataLocation dl;
-                DataLocationComputeType ctype;
-                int prevModelIndex;
-                for (int i = 0;i < kids.size();i++ )
-                {
-                        child = (Element) kids.get(i);
-                        if ( !"DataLocation".equals(child.getName()))
-                        {
-                                continue;
-                        }
-                        dl = createDataLocation(child);
-                        if ( dl == null )
-                        {
-                                continue;
-                        }
-                        if ( ((DurationLocation)dl).fromXML(child))
-                        {
-                                dl.setModelAlternative(this.getModelAlt());
-                                Integer duration = Integer.parseInt(child.getAttribute("Duration").getValue());
-                                ((DurationLocation)dl).setDuration(duration);
-                                _dataLocations.add(dl);
-                        }
-                }
-        }
-    }
-    @Override
-    protected void saveDataLocations(Element root, List<DataLocation> inputDataLocations){
-	
-        Element dlElem = new Element("DataLocations");
-        root.addContent(dlElem);
-        DataLocation dl,dndl;
-        DssDataLocation dssDndl;
-        String dssFile, relDssFile;
-
-        for (int i = 0; i< inputDataLocations.size();i++ )
-        {
-                dl = inputDataLocations.get(i);
-                dl.toXML(dlElem);
-                ((Element)dlElem.getChildren().get(i)).setAttribute("Duration", Integer.toString(((DurationLocation)dl).getDuration()));
-        }        
-    }
     public List<DataLocation> getOutputDataLocations(){
        //construct output data locations 
         List<DataLocation> ret = new ArrayList<>();
@@ -204,11 +105,11 @@ public class DurationAlternative extends SelfContainedPluginAlt{
         //create datalocations for each location of intrest, so that it can be linked to output from other models.
         
         //pool elevations
-        DataLocation FolsomPool_elev = new DurationLocation(this.getModelAlt(),"Folsom-Pool","ELEV",2);
+        DataLocation FolsomPool_elev = new DataLocation(this.getModelAlt(),"Folsom-Pool","ELEV");
         dlList.add(FolsomPool_elev);
         
         //pool inflows
-        DataLocation FolsomPool_flowin = new DurationLocation(this.getModelAlt(),"Folsom-Pool","FLOW-IN",2);
+        DataLocation FolsomPool_flowin = new DataLocation(this.getModelAlt(),"Folsom-Pool","FLOW-IN");
         dlList.add(FolsomPool_flowin);
 
         _dataLocations = dlList;
@@ -381,7 +282,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                             if(oimpl.getName().contains("30 Day")){
                                 return ComputeMax(tsc,30,inputEPart);
                             }else{
-                                return ComputeMax(tsc,((DurationLocation)dl).getDuration(),inputEPart);
+                                return ComputeMax(tsc,1,inputEPart);//1 day duration
                             }
                         }
                         

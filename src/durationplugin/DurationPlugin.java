@@ -144,9 +144,9 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
         DurationAlternative alt = getAlt(ma);
         for(DataLocation loc : alt.getDataLocations())
         {
-            DurationLocation tl = (DurationLocation)loc;
+            DataLocation tl = loc;
             OutputVariableImpl output = new OutputVariableImpl();
-            output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " " + tl.getDuration() + " Day volume duration max" );
+            output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " " + 1 + " Day volume duration max" );
             output.setDescription("Duration Plugin Volume Duration Max for " + ma.getName());
             if(loc.getParameter().equals("Flow")){
                 output.setParamId(Parameter.PARAMID_FLOW);
@@ -164,54 +164,17 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
             if(tl.getLinkedToLocation().getParameter().equals("Stage")){
                 //dont accumulate
                 output.setParamId(Parameter.PARAMID_STAGE);
-                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + tl.getDuration() + " Day average - max" );
+                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + 1 + " Day average - max" );
                 output.setDescription("Duration Plugin Max Average Stage for " + ma.getName());
             }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
                 //dont accumulate
                 output.setParamId(Parameter.PARAMID_TEMP);
-                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + tl.getDuration() + " Day average - max" );
+                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + 1 + " Day average - max" );
                 output.setDescription("Duration Plugin Max Average Temperature for " + ma.getName());
             }
             else{
-//                //this block is for cumulative flow or precip... not for production runs.
-//                OutputVariableImpl outputTot = new OutputVariableImpl();
-//                outputTot.setName(loc.getName()  + " - " + loc.getParameter() + " - " + ma.getName() + " total");
-//                if(loc.getParameter().equals("Flow")){
-//                    outputTot.setParamId(Parameter.PARAMID_FLOW);
-//                }else if(loc.getParameter().equals("Flow-Unreg")){
-//                    outputTot.setParamId(Parameter.PARAMID_FLOW);
-//                }else if(loc.getParameter().equals("Inflow")){
-//                    outputTot.setParamId(Parameter.PARAMID_FLOW);
-//                }else{
-//                    outputTot.setParamId(Parameter.PARAMID_PRECIP);
-//                }
-//                outputTot.setDescription("Trinity Plugin Total Volume for " + ma.getName());
-//                ret.add(outputTot);
             }
-//            //this block is for 30 day duration.
-//            OutputVariableImpl output30Day = new OutputVariableImpl();
-//            output30Day.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " 30 Day volume duration max" );
-//            output30Day.setDescription("Trinity Plugin 30 Day Volume Duration Max for " + ma.getName());
-//            if(loc.getParameter().equals("Flow")){
-//                output30Day.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Inflow")){
-//                output30Day.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Flow-Unreg")){
-//                output30Day.setParamId(Parameter.PARAMID_FLOW);
-//                output30Day.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " Unregulated Flow max" );
-//                output30Day.setDescription("Trinity Plugin Max Unregulated Flow for " + ma.getName());
-//            }
-//            if(tl.getLinkedToLocation().getParameter().equals("Stage")){
-//                //dont accumulate
-//                output30Day.setParamId(Parameter.PARAMID_STAGE);
-//                output30Day.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " 30 Day average - max" );
-//                output30Day.setDescription("Trinity Plugin Max 30 Day Average Stage for " + ma.getName());
-//            }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
-//                //dont accumulate
-//                output30Day.setParamId(Parameter.PARAMID_TEMP);
-//                output30Day.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " 30 Day average - max" );
-//                output30Day.setDescription("Trinity Plugin Max 30 Day Average Temperature for " + ma.getName());
-//            }
+
             ret.add(output);
 //            ret.add(output30Day);
         }
