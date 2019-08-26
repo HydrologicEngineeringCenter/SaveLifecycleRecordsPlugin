@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package trinityplugin;
+package durationplugin;
 import com.rma.factories.NewObjectFactory;
 import com.rma.factories.AbstractNewObjectFactory;
 import com.rma.io.FileManagerImpl;
@@ -16,10 +16,10 @@ import javax.swing.JComponent;
  *
  * @author WatPowerUser
  */
-public class TrinityAlternativeFactory extends AbstractNewObjectFactory  implements NewObjectFactory{
-    private TrinityPlugin _plugin;
-    public TrinityAlternativeFactory(TrinityPlugin plugin){
-        super(TrinityPluginI18n.getI18n(TrinityPluginMessages.Bundle_Name));
+public class DurationAlternativeFactory extends AbstractNewObjectFactory  implements NewObjectFactory{
+    private DurationPlugin _plugin;
+    public DurationAlternativeFactory(DurationPlugin plugin){
+        super(DurationPluginI18n.getI18n(DurationPluginMessages.Bundle_Name));
         _plugin = plugin;
     }
     @Override
@@ -36,7 +36,7 @@ public class TrinityAlternativeFactory extends AbstractNewObjectFactory  impleme
     @Override
     public Object createObject(JComponent jc) {
         GenericNewObjectPanel panel = (GenericNewObjectPanel) jc;
-        TrinityAlternative alt = new TrinityAlternative();
+        DurationAlternative alt = new DurationAlternative();
         alt.setName(panel.getSelectedName());
         alt.setDescription(panel.getSelectedDescription());
         alt.setFile(FileManagerImpl.getFileManager().getFile(panel.getSelectedFile().getPath() + RmaFile.separator + alt.getName() + _plugin.getAltFileExtension()));

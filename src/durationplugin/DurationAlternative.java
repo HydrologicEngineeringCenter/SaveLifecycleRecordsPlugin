@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package trinityplugin;
+package durationplugin;
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
 import hec.heclib.dss.DSSPathname;
@@ -25,18 +25,18 @@ import org.jdom.Element;
  *
  * @author WatPowerUser
  */
-public class TrinityAlternative extends SelfContainedPluginAlt{
+public class DurationAlternative extends SelfContainedPluginAlt{
     private List<DataLocation> _dataLocations = new ArrayList<>();
     private String _pluginVersion;
-    private static final String DocumentRoot = "TrinityAlternative";
+    private static final String DocumentRoot = "DurationAlternative";
     private static final String AlternativeNameAttribute = "Name";
     private static final String AlternativeDescriptionAttribute = "Desc";
     private ComputeOptions _computeOptions;
-    public TrinityAlternative(){
+    public DurationAlternative(){
         super();
         _dataLocations = new ArrayList<>();
     }
-    public TrinityAlternative(String name){
+    public DurationAlternative(String name){
         this();
         setName(name);
     }
@@ -153,11 +153,11 @@ public class TrinityAlternative extends SelfContainedPluginAlt{
                         {
                                 continue;
                         }
-                        if ( ((TrinityLocation)dl).fromXML(child))
+                        if ( ((DurationLocation)dl).fromXML(child))
                         {
                                 dl.setModelAlternative(this.getModelAlt());
                                 Integer duration = Integer.parseInt(child.getAttribute("Duration").getValue());
-                                ((TrinityLocation)dl).setDuration(duration);
+                                ((DurationLocation)dl).setDuration(duration);
                                 _dataLocations.add(dl);
                         }
                 }
@@ -176,7 +176,7 @@ public class TrinityAlternative extends SelfContainedPluginAlt{
         {
                 dl = inputDataLocations.get(i);
                 dl.toXML(dlElem);
-                ((Element)dlElem.getChildren().get(i)).setAttribute("Duration", Integer.toString(((TrinityLocation)dl).getDuration()));
+                ((Element)dlElem.getChildren().get(i)).setAttribute("Duration", Integer.toString(((DurationLocation)dl).getDuration()));
         }        
     }
     public List<DataLocation> getOutputDataLocations(){
@@ -203,55 +203,55 @@ public class TrinityAlternative extends SelfContainedPluginAlt{
         }
         List<DataLocation> dlList = new ArrayList<>();
         //create a default location so that links can be initialized.
-        DataLocation USC00410313 = new TrinityLocation(this.getModelAlt(),"USC00410313","Precipitation",1);//2);
+        DataLocation USC00410313 = new DurationLocation(this.getModelAlt(),"USC00410313","Precipitation",1);//2);
         dlList.add(USC00410313);
-        DataLocation USC00413668 = new TrinityLocation(this.getModelAlt(),"USC00413668","Precipitation",1);
+        DataLocation USC00413668 = new DurationLocation(this.getModelAlt(),"USC00413668","Precipitation",1);
         dlList.add(USC00413668);
-        DataLocation USC00410271 = new TrinityLocation(this.getModelAlt(),"USC00410271","Precipitation",1);
+        DataLocation USC00410271 = new DurationLocation(this.getModelAlt(),"USC00410271","Precipitation",1);
         dlList.add(USC00410271);
-        DataLocation USC00414517 = new TrinityLocation(this.getModelAlt(),"USC00414517","Precipitation",1);//2);
+        DataLocation USC00414517 = new DurationLocation(this.getModelAlt(),"USC00414517","Precipitation",1);//2);
         dlList.add(USC00414517);
-        DataLocation USC00410984 = new TrinityLocation(this.getModelAlt(),"USC00410984","Precipitation",1);//3);
+        DataLocation USC00410984 = new DurationLocation(this.getModelAlt(),"USC00410984","Precipitation",1);//3);
         dlList.add(USC00410984);
-        DataLocation USC00414972 = new TrinityLocation(this.getModelAlt(),"USC00414972","Precipitation",1);//2);
+        DataLocation USC00414972 = new DurationLocation(this.getModelAlt(),"USC00414972","Precipitation",1);//2);
         dlList.add(USC00414972);
-        DataLocation USC00419532 = new TrinityLocation(this.getModelAlt(),"USC00419532","Precipitation",1);
+        DataLocation USC00419532 = new DurationLocation(this.getModelAlt(),"USC00419532","Precipitation",1);
         dlList.add(USC00419532);
-        DataLocation USC00411063 = new TrinityLocation(this.getModelAlt(),"USC00411063","Precipitation",1);
+        DataLocation USC00411063 = new DurationLocation(this.getModelAlt(),"USC00411063","Precipitation",1);
         dlList.add(USC00411063);
-        DataLocation USC00412334 = new TrinityLocation(this.getModelAlt(),"USC00412334","Precipitation",1);//2);
+        DataLocation USC00412334 = new DurationLocation(this.getModelAlt(),"USC00412334","Precipitation",1);//2);
         dlList.add(USC00412334);
-        DataLocation USC00412334T = new TrinityLocation(this.getModelAlt(),"temperature","Temp",1);//2);
+        DataLocation USC00412334T = new DurationLocation(this.getModelAlt(),"temperature","Temp",1);//2);
         dlList.add(USC00412334T);
-        DataLocation USC00413247 = new TrinityLocation(this.getModelAlt(),"USC00413247","Precipitation",1);//3);
+        DataLocation USC00413247 = new DurationLocation(this.getModelAlt(),"USC00413247","Precipitation",1);//3);
         dlList.add(USC00413247);
-        DataLocation USC00411800 = new TrinityLocation(this.getModelAlt(),"USC00411800","Precipitation",1);//2);
+        DataLocation USC00411800 = new DurationLocation(this.getModelAlt(),"USC00411800","Precipitation",1);//2);
         dlList.add(USC00411800);
-        DataLocation USC00416130 = new TrinityLocation(this.getModelAlt(),"USC00416130","Precipitation",1);//3);
+        DataLocation USC00416130 = new DurationLocation(this.getModelAlt(),"USC00416130","Precipitation",1);//3);
         dlList.add(USC00416130);
-        DataLocation USC00417659 = new TrinityLocation(this.getModelAlt(),"USC00417659","Precipitation",1);//2);
+        DataLocation USC00417659 = new DurationLocation(this.getModelAlt(),"USC00417659","Precipitation",1);//2);
         dlList.add(USC00417659);
-        DataLocation USC00345563 = new TrinityLocation(this.getModelAlt(),"USC00345563","Precipitation",1);
+        DataLocation USC00345563 = new DurationLocation(this.getModelAlt(),"USC00345563","Precipitation",1);
         dlList.add(USC00345563);
-        DataLocation USC00412404 = new TrinityLocation(this.getModelAlt(),"USC00412404","Precipitation",1);
+        DataLocation USC00412404 = new DurationLocation(this.getModelAlt(),"USC00412404","Precipitation",1);
         dlList.add(USC00412404);
-        DataLocation USC00410337 = new TrinityLocation(this.getModelAlt(),"USC00410337","Precipitation",1);//2);
+        DataLocation USC00410337 = new DurationLocation(this.getModelAlt(),"USC00410337","Precipitation",1);//2);
         dlList.add(USC00410337);
-        DataLocation USC00413691 = new TrinityLocation(this.getModelAlt(),"USC00413691","Precipitation",1);//3);
+        DataLocation USC00413691 = new DurationLocation(this.getModelAlt(),"USC00413691","Precipitation",1);//3);
         dlList.add(USC00413691);
-        DataLocation USC00417028 = new TrinityLocation(this.getModelAlt(),"USC00417028","Precipitation",1);//2);
+        DataLocation USC00417028 = new DurationLocation(this.getModelAlt(),"USC00417028","Precipitation",1);//2);
         dlList.add(USC00417028);
-        DataLocation USC00411490 = new TrinityLocation(this.getModelAlt(),"USC00411490","Precipitation",1);
+        DataLocation USC00411490 = new DurationLocation(this.getModelAlt(),"USC00411490","Precipitation",1);
         dlList.add(USC00411490);
-        DataLocation USW00013960 = new TrinityLocation(this.getModelAlt(),"USW00013960","Precipitation",1);
+        DataLocation USW00013960 = new DurationLocation(this.getModelAlt(),"USW00013960","Precipitation",1);
         dlList.add(USW00013960);
-        DataLocation USC00419522 = new TrinityLocation(this.getModelAlt(),"USC00419522","Precipitation",1);//2);
+        DataLocation USC00419522 = new DurationLocation(this.getModelAlt(),"USC00419522","Precipitation",1);//2);
         dlList.add(USC00419522);
-        DataLocation USC00418274 = new TrinityLocation(this.getModelAlt(),"USC00418274","Precipitation",1);//3);
+        DataLocation USC00418274 = new DurationLocation(this.getModelAlt(),"USC00418274","Precipitation",1);//3);
         dlList.add(USC00418274);
-        DataLocation USC00415766 = new TrinityLocation(this.getModelAlt(),"USC00415766","Precipitation",1);//2);
+        DataLocation USC00415766 = new DurationLocation(this.getModelAlt(),"USC00415766","Precipitation",1);//2);
         dlList.add(USC00415766);
-        DataLocation USC00410262 = new TrinityLocation(this.getModelAlt(),"USC00410262","Precipitation",1);//3);
+        DataLocation USC00410262 = new DurationLocation(this.getModelAlt(),"USC00410262","Precipitation",1);//3);
         dlList.add(USC00410262);
         _dataLocations = dlList;
 	return dlList; 
@@ -264,29 +264,29 @@ public class TrinityAlternative extends SelfContainedPluginAlt{
         //create datalocations for each location of intrest for trinity, so that it can be linked to output from other models.
         
         //pool inflows
-        DataLocation benbrookLoc = new TrinityLocation(this.getModelAlt(),"Benbrook-Pool","Inflow",2);
+        DataLocation benbrookLoc = new DurationLocation(this.getModelAlt(),"Benbrook-Pool","Inflow",2);
         dlList.add(benbrookLoc);
-        DataLocation grapevineLoc = new TrinityLocation(this.getModelAlt(),"Grapevine-Pool","Inflow",3);
+        DataLocation grapevineLoc = new DurationLocation(this.getModelAlt(),"Grapevine-Pool","Inflow",3);
         dlList.add(grapevineLoc);
-        DataLocation joePoolLoc = new TrinityLocation(this.getModelAlt(),"Joe Pool-Pool","Inflow",2);
+        DataLocation joePoolLoc = new DurationLocation(this.getModelAlt(),"Joe Pool-Pool","Inflow",2);
         dlList.add(joePoolLoc);
-        DataLocation lewisvilleLoc = new TrinityLocation(this.getModelAlt(),"Lewisville-Pool","Inflow",3);
+        DataLocation lewisvilleLoc = new DurationLocation(this.getModelAlt(),"Lewisville-Pool","Inflow",3);
         dlList.add(lewisvilleLoc);
-        DataLocation navarroMillsLoc = new TrinityLocation(this.getModelAlt(),"Mountain Creek-Pool","Inflow",1);
+        DataLocation navarroMillsLoc = new DurationLocation(this.getModelAlt(),"Mountain Creek-Pool","Inflow",1);
         dlList.add(navarroMillsLoc);
-        DataLocation rayRobertsLoc = new TrinityLocation(this.getModelAlt(),"Ray Roberts-Pool","Inflow",2);
+        DataLocation rayRobertsLoc = new DurationLocation(this.getModelAlt(),"Ray Roberts-Pool","Inflow",2);
         dlList.add(rayRobertsLoc);
-        DataLocation richlandChambersLoc = new TrinityLocation(this.getModelAlt(),"Eagle Mountain-Pool","Inflow",4);
+        DataLocation richlandChambersLoc = new DurationLocation(this.getModelAlt(),"Eagle Mountain-Pool","Inflow",4);
         dlList.add(richlandChambersLoc);
-        DataLocation dallasFloodwayLoc = new TrinityLocation(this.getModelAlt(),"Bridgeport-Pool","Inflow",4);
+        DataLocation dallasFloodwayLoc = new DurationLocation(this.getModelAlt(),"Bridgeport-Pool","Inflow",4);
         dlList.add(dallasFloodwayLoc);
-        DataLocation lakeWorthLoc = new TrinityLocation(this.getModelAlt(),"Lake Worth-Pool","Inflow",3);
+        DataLocation lakeWorthLoc = new DurationLocation(this.getModelAlt(),"Lake Worth-Pool","Inflow",3);
         dlList.add(lakeWorthLoc);
 
         //HMS inflows
-        DataLocation weatherfordLoc = new TrinityLocation(this.getModelAlt(),"Lake Weatherford Inflows","Flow",2);
+        DataLocation weatherfordLoc = new DurationLocation(this.getModelAlt(),"Lake Weatherford Inflows","Flow",2);
         dlList.add(weatherfordLoc);
-        DataLocation arlingtonLoc = new TrinityLocation(this.getModelAlt(),"Arlington_Inflow","Flow",2);
+        DataLocation arlingtonLoc = new DurationLocation(this.getModelAlt(),"Arlington_Inflow","Flow",2);
         dlList.add(arlingtonLoc);
         _dataLocations = dlList;
 	return dlList; 
@@ -458,7 +458,7 @@ public class TrinityAlternative extends SelfContainedPluginAlt{
                             if(oimpl.getName().contains("30 Day")){
                                 return ComputeMax(tsc,30,inputEPart);
                             }else{
-                                return ComputeMax(tsc,((TrinityLocation)dl).getDuration(),inputEPart);
+                                return ComputeMax(tsc,((DurationLocation)dl).getDuration(),inputEPart);
                             }
                         }
                         

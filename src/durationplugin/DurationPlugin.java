@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package trinityplugin;
+package durationplugin;
 import com.rma.factories.NewObjectFactory;
 import hec.data.Parameter;
 import hec.model.OutputVariable;
@@ -26,22 +26,22 @@ import java.util.List;
  *
  * @author WatPowerUser
  */
-public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlternative> implements CreatableWatPlugin, OutputPlugin  {
-    public static final String PluginName = "Trinity Plugin";
+public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlternative> implements CreatableWatPlugin, OutputPlugin  {
+    public static final String PluginName = "Duration Plugin";
     private static final String _pluginVersion = "1.0.0";
-    private static final String _pluginSubDirectory = "TrinityPlugin";
-    private static final String _pluginExtension = ".tp";
+    private static final String _pluginSubDirectory = "DurationPlugin";
+    private static final String _pluginExtension = ".dp";
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        TrinityPlugin p = new TrinityPlugin();
+        DurationPlugin p = new DurationPlugin();
     }
-    public TrinityPlugin(){
+    public DurationPlugin(){
         super();
         setName(PluginName);
         setProgramOrderItem(new ProgramOrderItem(PluginName,
-                "A plugin constructed for Trinity River project",
+                "A plugin to compute duration maximums",
                 false,1,"shortname","Images/fda/wsp.png"));
         WatPluginManager.register(this);
     }
@@ -60,7 +60,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
     @Override
     public boolean saveProject() {
         boolean success = true;
-        for(TrinityAlternative alt: _altList){
+        for(DurationAlternative alt: _altList){
             if(!alt.saveData()){
                 success = false;
                 System.out.println("Alternative " + alt.getName() + " could not save");
@@ -69,16 +69,16 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
         return success;
     }
     @Override
-    protected TrinityAlternative newAlternative(String string) {
-        return new TrinityAlternative(string);
+    protected DurationAlternative newAlternative(String string) {
+        return new DurationAlternative(string);
     }
     @Override
     protected NewObjectFactory getAltObjectFactory() {
-        return new TrinityAlternativeFactory(this);
+        return new DurationAlternativeFactory(this);
     }
     @Override
     public List<DataLocation> getDataLocations(ModelAlternative ma, int i) {
-        TrinityAlternative alt = getAlt(ma);
+        DurationAlternative alt = getAlt(ma);
         if(alt==null)return null;
         if(DataLocation.INPUT_LOCATIONS == i){
             //input
@@ -90,7 +90,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
     }
     @Override
     public boolean setDataLocations(ModelAlternative ma, List<DataLocation> list) throws ModelLinkingException {
-        TrinityAlternative alt = getAlt(ma);
+        DurationAlternative alt = getAlt(ma);
         if(alt!=null){
             return alt.setDataLocations(list);
         }
@@ -98,7 +98,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
     }
     @Override
     public boolean compute(ModelAlternative ma) {
-        TrinityAlternative alt = getAlt(ma);
+        DurationAlternative alt = getAlt(ma);
         if(alt!=null){
             alt.setComputeOptions(ma.getComputeOptions());
             return alt.compute();
@@ -106,7 +106,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
         return false;
     }
     @Override
-    public void editAlternative(TrinityAlternative e) {
+    public void editAlternative(DurationAlternative e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     @Override
@@ -141,13 +141,13 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
     @Override
     public List<OutputVariable> getAvailOutputVariables(ModelAlternative ma) {
         List<OutputVariable> ret = new ArrayList<>();
-        TrinityAlternative alt = getAlt(ma);
+        DurationAlternative alt = getAlt(ma);
         for(DataLocation loc : alt.getDataLocations())
         {
-            TrinityLocation tl = (TrinityLocation)loc;
+            DurationLocation tl = (DurationLocation)loc;
             OutputVariableImpl output = new OutputVariableImpl();
             output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " " + tl.getDuration() + " Day volume duration max" );
-            output.setDescription("Trinity Plugin Volume Duration Max for " + ma.getName());
+            output.setDescription("Duration Plugin Volume Duration Max for " + ma.getName());
             if(loc.getParameter().equals("Flow")){
                 output.setParamId(Parameter.PARAMID_FLOW);
             }else if(loc.getParameter().equals("Inflow")){
@@ -155,7 +155,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
             }else if(loc.getParameter().equals("Flow-Unreg")){
                 output.setParamId(Parameter.PARAMID_FLOW);
                 output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " Unregulated Flow max" );
-                output.setDescription("Trinity Plugin Max Unregulated Flow for " + ma.getName());
+                output.setDescription("Duration Plugin Max Unregulated Flow for " + ma.getName());
             }
             else{
                 output.setParamId(Parameter.PARAMID_PRECIP);
@@ -165,12 +165,12 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
                 //dont accumulate
                 output.setParamId(Parameter.PARAMID_STAGE);
                 output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + tl.getDuration() + " Day average - max" );
-                output.setDescription("Trinity Plugin Max Average Stage for " + ma.getName());
+                output.setDescription("Duration Plugin Max Average Stage for " + ma.getName());
             }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
                 //dont accumulate
                 output.setParamId(Parameter.PARAMID_TEMP);
                 output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + tl.getDuration() + " Day average - max" );
-                output.setDescription("Trinity Plugin Max Average Temperature for " + ma.getName());
+                output.setDescription("Duration Plugin Max Average Temperature for " + ma.getName());
             }
             else{
 //                //this block is for cumulative flow or precip... not for production runs.
@@ -222,7 +222,7 @@ public class TrinityPlugin extends AbstractSelfContainedWatPlugin<TrinityAlterna
     public boolean computeOutputVariables(List<OutputVariable> list, ModelAlternative ma) {
         for(OutputVariable o : list){
             OutputVariableImpl oimpl = (OutputVariableImpl)o;
-            TrinityAlternative alt = getAlt(ma);
+            DurationAlternative alt = getAlt(ma);
             oimpl.setValue(alt.getOutputValue(oimpl));
         }
         return true;

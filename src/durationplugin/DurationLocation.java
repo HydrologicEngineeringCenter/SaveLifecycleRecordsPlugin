@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package trinityplugin;
+package durationplugin;
 import com.rma.util.XMLUtilities;
 import hec2.model.DataLocation;
 import hec2.model.DataLocationComputeType;
@@ -15,16 +15,16 @@ import org.jdom.Element;
  *
  * @author WatPowerUser
  */
-public class TrinityLocation extends DataLocation {
+public class DurationLocation extends DataLocation {
     private Integer _duration;
-    public TrinityLocation(ModelAlternative malt, String name, String parameter, Integer duration){
+    public DurationLocation(ModelAlternative malt, String name, String parameter, Integer duration){
         super(malt,name,parameter);
         _duration = duration;
     }
-    public TrinityLocation(){
+    public DurationLocation(){
         super();
     }
-    public TrinityLocation(DataLocation dl, Integer duration){
+    public DurationLocation(DataLocation dl, Integer duration){
         super(dl.getModelAlternative(),dl.getName(),dl.getParameter());
         _duration = duration;
     }
