@@ -115,11 +115,11 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
     }
     @Override
     public List<GraphicElement> getGraphicElements(ModelAlternative ma) {
-        return new ArrayList<GraphicElement>();
+        return new ArrayList<>();
     }
     @Override
     public List<OutputElement> getOutputReports(ModelAlternative ma) {
-        return new ArrayList<OutputElement>();
+        return new ArrayList<>();
     }
     @Override
     public boolean displayEditor(GraphicElement ge) {
@@ -131,7 +131,7 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
     }
     @Override
     public List<EditAction> getEditActions(ModelAlternative ma) {
-        return new ArrayList<EditAction>();
+        return new ArrayList<>();
     }
     @Override
     public void editAction(String string, ModelAlternative ma) {
@@ -142,43 +142,8 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
     public List<OutputVariable> getAvailOutputVariables(ModelAlternative ma) {
         List<OutputVariable> ret = new ArrayList<>();
         DurationAlternative alt = getAlt(ma);
-        for(DataLocation loc : alt.getDataLocations())
-        {
-            DataLocation tl = loc;
-            OutputVariableImpl output = new OutputVariableImpl();
-            output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " " + 1 + " Day volume duration max" );
-            output.setDescription("Duration Plugin Volume Duration Max for " + ma.getName());
-            if(loc.getParameter().equals("Flow")){
-                output.setParamId(Parameter.PARAMID_FLOW);
-            }else if(loc.getParameter().equals("Inflow")){
-                output.setParamId(Parameter.PARAMID_FLOW);
-            }else if(loc.getParameter().equals("Flow-Unreg")){
-                output.setParamId(Parameter.PARAMID_FLOW);
-                output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + ma.getName() + " Unregulated Flow max" );
-                output.setDescription("Duration Plugin Max Unregulated Flow for " + ma.getName());
-            }
-            else{
-                output.setParamId(Parameter.PARAMID_PRECIP);
-            }
-            
-            if(tl.getLinkedToLocation().getParameter().equals("Stage")){
-                //dont accumulate
-                output.setParamId(Parameter.PARAMID_STAGE);
-                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + 1 + " Day average - max" );
-                output.setDescription("Duration Plugin Max Average Stage for " + ma.getName());
-            }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
-                //dont accumulate
-                output.setParamId(Parameter.PARAMID_TEMP);
-                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + ma.getName() + " " + 1 + " Day average - max" );
-                output.setDescription("Duration Plugin Max Average Temperature for " + ma.getName());
-            }
-            else{
-            }
+        return alt.getOutputVariables();
 
-            ret.add(output);
-//            ret.add(output30Day);
-        }
-        return ret;
     }
 
     @Override
