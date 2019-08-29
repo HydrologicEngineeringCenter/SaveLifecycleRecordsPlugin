@@ -8,6 +8,7 @@ package durationplugin;
 import hec.model.OutputVariable;
 import hec2.model.DataLocation;
 import hec2.wat.model.tracking.OutputVariableImpl;
+import org.jdom.Element;
 
 
 
@@ -20,6 +21,7 @@ public class DurationOutputVariable{
     private boolean _durationInDays;
     private DurationComputeTypes _computeType;
     private DataLocation _location;
+    private String _DataLocationName;
     private final OutputVariable _outputVariable;
     public DataLocation getLocation(){
         return _location;
@@ -69,5 +71,18 @@ public class DurationOutputVariable{
 //            }
 //            else{
 //            }
+    }
+    public Element writeToXML(){
+        Element ele = new Element("DurationOutputVariable");
+        ele.setAttribute("Duration", getDuration().toString());
+        ele.setAttribute("DurationValueRepresentsDays", Boolean.toString(durationInDays()));
+        ele.setAttribute("ComputeType", getComputeType().toString());
+        return ele;
+    }
+    public static DurationOutputVariable readFromElement(Element ele, DataLocation loc){
+        Integer duration = Integer.parseInt(ele.getAttribute("Duration").getValue());
+        boolean durationInDays = Boolean.parseBoolean(ele.getAttribute("DurationValueRepresentsDays").getValue());
+        DurationComputeTypes computeType = DurationComputeTypes.valueOf(ele.getAttribute("ComputeType").getValue());
+        return new DurationOutputVariable(loc,duration,durationInDays,computeType);
     }
 }

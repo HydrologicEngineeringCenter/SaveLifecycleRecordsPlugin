@@ -17,6 +17,8 @@ import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -227,7 +229,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
     private double ComputeMinimumForMaximumWindow(TimeSeriesContainer input, Integer duration, boolean durationInDays, String ePart){
         if(input==null){return 0;}
         double[] vals = input.values;
-        
+        Arrays.sort(vals);//ascending
         Integer stepsPerDuration = Integer.MAX_VALUE;
         if(durationInDays){
             Integer stepsPerDay = timeStepsPerDay(ePart);
@@ -235,26 +237,8 @@ public class DurationAlternative extends SelfContainedPluginAlt{
         }else{
             stepsPerDuration = timeStepsPerDuration(ePart,duration);
         }
-        if(stepsPerDuration == Integer.MAX_VALUE){return 0;}
-
-        double maxVal = Double.MIN_VALUE;
-        double avg = 0;
-        double durationVolume = 0;
-        for(int i = 0; i<vals.length;i++){
-            durationVolume += vals[i];
-            if(i==stepsPerDuration){
-                avg =durationVolume/stepsPerDuration;
-                //avg = durationVolume/duration;
-                maxVal = avg;
-            }else if(i>stepsPerDuration){
-                double oldval = vals[i-stepsPerDuration];
-                durationVolume-=oldval;
-                avg =durationVolume/stepsPerDuration;
-                //avg = durationVolume/duration;
-                if(avg>maxVal)maxVal = avg;
-            }
-        }
-        return maxVal;
+        double ret = vals[vals.length-stepsPerDuration];//pull from the end because ascending
+        return ret;
     }
     private double ComputeDurationMax(TimeSeriesContainer input, Integer duration, boolean durationInDays, String ePart){
         if(input==null){return 0;}
