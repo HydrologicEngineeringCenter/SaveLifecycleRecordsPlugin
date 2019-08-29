@@ -158,7 +158,7 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
 
     @Override
     public boolean hasOutputVariables(ModelAlternative ma) {
-        return true;
+        return getAlt(ma).hasOutputVariables;
     }
 
 }

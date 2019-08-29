@@ -32,6 +32,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
     private static final String AlternativeNameAttribute = "Name";
     private static final String AlternativeDescriptionAttribute = "Desc";
     private ComputeOptions _computeOptions;
+    private List<OutputVariable> _outputVariables;
     public DurationAlternative(){
         super();
         _dataLocations = new ArrayList<>();
@@ -423,5 +424,16 @@ public class DurationAlternative extends SelfContainedPluginAlt{
 //            ret.add(output30Day);
         }
                 return ret;
+    }
+    public boolean hasOutputVariables(){
+        if (_outputVariables != null){
+            if(_outputVariables.size() == 0){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
     }
 }
