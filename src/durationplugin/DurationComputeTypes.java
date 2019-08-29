@@ -11,7 +11,7 @@ package durationplugin;
  */
 public enum DurationComputeTypes {
     DurationMax,
-    MinValueInMaxWindow,
+    MinValueInMaxWindow,//ValueExceededForSpecifiedDuration
     DurationTotal,
     TimeStepsOverThreshold
 }
