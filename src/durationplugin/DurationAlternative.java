@@ -19,7 +19,9 @@ import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.jdom.Document;
 import org.jdom.Element;
 /**
@@ -54,9 +56,15 @@ public class DurationAlternative extends SelfContainedPluginAlt{
             }
             Element outputVariables = new Element(OutputVariableElement);
             if(_outputVariables!=null){
-                //write out output variables
-                for(DurationOutputVariable d : _outputVariables){
-                    //add to the element.
+                //write out output variables by data location
+                for(DataLocation loc : _dataLocations){
+                    Element locationElement = new Element("DataLocation");
+                    locationElement.setAttribute("Name", loc.getName());
+                    locationElement.setAttribute("Parameter", loc.getParameter());
+                    for(DurationOutputVariable d : _outputVariables){
+                        //add to the element.
+                        locationElement.addContent(d.writeToXML());
+                    }
                 }
             }
             root.addContent(outputVariables);
@@ -88,13 +96,32 @@ public class DurationAlternative extends SelfContainedPluginAlt{
             //determine how to store durations here
             //each dataLocation should have a list of durations
             // each independant duration should create an output variable
-            for(DataLocation d : _dataLocations){
-                //If xml document contains a node with durations for this data location, load them as output variables.
+            if(_dataLocations != null){
                 if(_outputVariables==null){
                     _outputVariables = new ArrayList<>();
                 }
-                //
+                Element outVars = ele.getChild(OutputVariableElement);
+                if(outVars!=null){
+                    for(Object dloc: outVars.getChildren()){
+                        for(DataLocation d : _dataLocations){
+                            //If xml document contains a node with durations for this data location, load them as output variables.
+                            Element dlocele = (Element)dloc;
+                            if(dlocele.getAttribute("Name").getValue().equals(d.getName())){
+                                //check parameter
+                                if(dlocele.getAttribute("Parameter").getValue().equals(d.getParameter())){
+                                    _outputVariables.add(DurationOutputVariable.readFromElement(dlocele, d));
+                                }
+                            }
+                            //
+                        }                    
+                    }                    
+                }
+
+
+            }else{
+                
             }
+
             setModified(false);
             return true;
         }else{
