@@ -356,9 +356,9 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                             return d;//Collections.max(Arrays.asList(ArrayUtils.toObject(tsc.values)));
                         }else{
                             if(oimpl.getName().contains("30 Day")){
-                                return ComputeDurationMax(tsc,30,inputEPart);
+                                return ComputeDurationMax(tsc,30, true, inputEPart);
                             }else{
-                                return ComputeDurationMax(tsc,1,inputEPart);//1 day duration
+                                return ComputeDurationMax(tsc,1, true, inputEPart);//1 day duration
                             }
                         }
                         
