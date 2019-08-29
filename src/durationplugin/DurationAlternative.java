@@ -208,12 +208,49 @@ public class DurationAlternative extends SelfContainedPluginAlt{
             return null;
         }
     }
-    private double ComputeMax(TimeSeriesContainer input, Integer durationInDays, String ePart){
+    private double ComputeMinimumForMaximumWindow(TimeSeriesContainer input, Integer duration, boolean durationInDays, String ePart){
         if(input==null){return 0;}
         double[] vals = input.values;
-        Integer stepsPerDay = timeStepsPerDay(ePart,durationInDays);
-        if(stepsPerDay == Integer.MAX_VALUE){return 0;}
-        Integer stepsPerDuration = stepsPerDay*durationInDays;
+        
+        Integer stepsPerDuration = Integer.MAX_VALUE;
+        if(durationInDays){
+            Integer stepsPerDay = timeStepsPerDay(ePart);
+            stepsPerDuration = stepsPerDay*duration;
+        }else{
+            stepsPerDuration = timeStepsPerDuration(ePart,duration);
+        }
+        if(stepsPerDuration == Integer.MAX_VALUE){return 0;}
+
+        double maxVal = Double.MIN_VALUE;
+        double avg = 0;
+        double durationVolume = 0;
+        for(int i = 0; i<vals.length;i++){
+            durationVolume += vals[i];
+            if(i==stepsPerDuration){
+                avg =durationVolume/stepsPerDuration;
+                //avg = durationVolume/duration;
+                maxVal = avg;
+            }else if(i>stepsPerDuration){
+                double oldval = vals[i-stepsPerDuration];
+                durationVolume-=oldval;
+                avg =durationVolume/stepsPerDuration;
+                //avg = durationVolume/duration;
+                if(avg>maxVal)maxVal = avg;
+            }
+        }
+        return maxVal;
+    }
+    private double ComputeDurationMax(TimeSeriesContainer input, Integer duration, boolean durationInDays, String ePart){
+        if(input==null){return 0;}
+        double[] vals = input.values;
+        Integer stepsPerDuration = Integer.MAX_VALUE;
+        if(durationInDays){
+            Integer stepsPerDay = timeStepsPerDay(ePart);
+            stepsPerDuration = stepsPerDay*duration;
+        }else{
+            stepsPerDuration = timeStepsPerDuration(ePart,duration);
+        }
+        if(stepsPerDuration == Integer.MAX_VALUE){return 0;}
         double maxVal = Double.MIN_VALUE;
         double avg = 0;
         double durationVolume = 0;
@@ -242,7 +279,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
         }
         return volume;
     }
-    private int timeStepsPerDay(String ePart, Integer duration){
+    private int timeStepsPerDay(String ePart){
         switch(ePart.toUpperCase()){
             case "1HOUR":
                 return 24;
@@ -258,6 +295,40 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                 return 1440/15;
             case "30MIN":
                 return 1440/30;
+            default:
+                return Integer.MAX_VALUE;
+        }
+    }
+    private int timeStepsPerDuration(String ePart, Integer durationInHours){
+        switch(ePart.toUpperCase()){
+            case "1HOUR":
+                return 1*durationInHours;
+            case "3HOUR":
+                if(durationInHours%3==0){
+                    return durationInHours/3;
+                }else{
+                    return Integer.MAX_VALUE;
+                }
+            case "6HOUR":
+                if(durationInHours%6==0){
+                    return durationInHours/6;
+                }else{
+                    return Integer.MAX_VALUE;
+                }
+            case "DAILY":
+                if(durationInHours%24==0){
+                    return durationInHours/24;
+                }else{
+                    return Integer.MAX_VALUE;
+                }
+            case "1MIN":
+                return 60*durationInHours;
+            case "5MIN":
+                return 12*durationInHours;
+            case "15MIN":
+                return 4*durationInHours;
+            case "30MIN":
+                return 2*durationInHours;
             default:
                 return Integer.MAX_VALUE;
         }
@@ -285,9 +356,9 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                             return d;//Collections.max(Arrays.asList(ArrayUtils.toObject(tsc.values)));
                         }else{
                             if(oimpl.getName().contains("30 Day")){
-                                return ComputeMax(tsc,30,inputEPart);
+                                return ComputeDurationMax(tsc,30,inputEPart);
                             }else{
-                                return ComputeMax(tsc,1,inputEPart);//1 day duration
+                                return ComputeDurationMax(tsc,1,inputEPart);//1 day duration
                             }
                         }
                         
