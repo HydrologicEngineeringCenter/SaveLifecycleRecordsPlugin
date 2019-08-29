@@ -7,7 +7,6 @@
 package durationplugin;
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
-import hec.data.Parameter;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDSSDataAttributes;
 import hec.io.DSSIdentifier;
@@ -29,10 +28,11 @@ public class DurationAlternative extends SelfContainedPluginAlt{
     private List<DataLocation> _dataLocations = new ArrayList<>();
     private String _pluginVersion;
     private static final String DocumentRoot = "DurationAlternative";
+    private static final String OutputVariableElement = "OutputVariables";
     private static final String AlternativeNameAttribute = "Name";
     private static final String AlternativeDescriptionAttribute = "Desc";
     private ComputeOptions _computeOptions;
-    private List<OutputVariable> _outputVariables;
+    private List<DurationOutputVariable> _outputVariables;
     public DurationAlternative(){
         super();
         _dataLocations = new ArrayList<>();
@@ -50,6 +50,14 @@ public class DurationAlternative extends SelfContainedPluginAlt{
             if(_dataLocations!=null){
                 saveDataLocations(root,_dataLocations);
             }
+            Element outputVariables = new Element(OutputVariableElement);
+            if(_outputVariables!=null){
+                //write out output variables
+                for(DurationOutputVariable d : _outputVariables){
+                    //add to the element.
+                }
+            }
+            root.addContent(outputVariables);
             Document doc = new Document(root);
             return writeXMLFile(doc,file);
         }
@@ -393,45 +401,13 @@ public class DurationAlternative extends SelfContainedPluginAlt{
     }
     
     public List<OutputVariable> getOutputVariables(){
-        return _outputVariables;
-//        List<OutputVariable> ret = new ArrayList<>();
-//                for(DataLocation loc : getDataLocations())
-//        {
-//            DataLocation tl = loc;
-//            OutputVariableImpl output = new OutputVariableImpl();
-//            output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + getName() + " " + 1 + " Day volume duration max" );
-//            output.setDescription("Duration Plugin Volume Duration Max for " + getName());
-//            if(loc.getParameter().equals("Flow")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Inflow")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Flow-Unreg")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//                output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + getName() + " Unregulated Flow max" );
-//                output.setDescription("Duration Plugin Max Unregulated Flow for " + getName());
-//            }
-//            else{
-//                output.setParamId(Parameter.PARAMID_PRECIP);
-//            }
-//            
-//            if(tl.getLinkedToLocation().getParameter().equals("Stage")){
-//                //dont accumulate
-//                output.setParamId(Parameter.PARAMID_STAGE);
-//                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + getName() + " " + 1 + " Day average - max" );
-//                output.setDescription("Duration Plugin Max Average Stage for " + getName());
-//            }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
-//                //dont accumulate
-//                output.setParamId(Parameter.PARAMID_TEMP);
-//                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + getName() + " " + 1 + " Day average - max" );
-//                output.setDescription("Duration Plugin Max Average Temperature for " + getName());
-//            }
-//            else{
-//            }
-//
-//            ret.add(output);
-////            ret.add(output30Day);
-//        }
-//                return ret;
+        
+        List<OutputVariable> ret = new ArrayList<>();
+        for(DurationOutputVariable var : _outputVariables)
+        {
+            ret.add(var.getOutputVariable());
+        }
+        return ret;
     }
     public boolean hasOutputVariables(){
         if (_outputVariables != null){
