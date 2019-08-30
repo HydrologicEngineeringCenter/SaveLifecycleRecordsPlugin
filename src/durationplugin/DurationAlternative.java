@@ -18,10 +18,7 @@ import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.jdom.Document;
 import org.jdom.Element;
 /**
