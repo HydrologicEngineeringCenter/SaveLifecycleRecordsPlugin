@@ -109,7 +109,11 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                             if(dlocele.getAttribute("Name").getValue().equals(d.getName())){
                                 //check parameter
                                 if(dlocele.getAttribute("Parameter").getValue().equals(d.getParameter())){
-                                    _outputVariables.add(DurationOutputVariable.readFromElement(dlocele, d));
+                                    for(Object e: dlocele.getChildren()){
+                                        Element outele = (Element)e;
+                                        _outputVariables.add(DurationOutputVariable.readFromElement(outele, d));
+                                    }
+                                    
                                 }
                             }
                             //
