@@ -145,15 +145,10 @@ public class DurationPlugin extends AbstractSelfContainedWatPlugin<DurationAlter
         return alt.getOutputVariables();
 
     }
-
     @Override
-    public boolean computeOutputVariables(List<OutputVariable> list, ModelAlternative ma) {
-        for(OutputVariable o : list){
-            OutputVariableImpl oimpl = (OutputVariableImpl)o;
-            DurationAlternative alt = getAlt(ma);
-            oimpl.setValue(alt.getOutputValue(oimpl));
-        }
-        return true;
+    public boolean computeOutputVariables(List<OutputVariable> list, ModelAlternative ma) { 
+        DurationAlternative alt = getAlt(ma);
+        return alt.computeOutputVariables(list);
     }
 
     @Override

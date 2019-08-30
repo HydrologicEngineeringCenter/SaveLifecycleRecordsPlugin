@@ -360,44 +360,6 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                 return Integer.MAX_VALUE;
         }
     }
-    protected double getOutputValue(OutputVariableImpl oimpl){
-        //String dlName = .split(" - ")[0];//check for volume duration or max volume
-        String[] s = oimpl._name.split(" - ");
-        String dlName = s[0];
-        if(s[1].equals("Temp")){
-            dlName = s[0];
-        }
-        hec2.wat.model.ComputeOptions wco = (hec2.wat.model.ComputeOptions)_computeOptions;
-        String dssFilePath = wco.getDssFilename();
-        for(DataLocation dl : _dataLocations){
-            if(dl.getName().equals(dlName)){
-                if(dl.getParameter().equals(s[1])){
-                    String dssPath = dl.getLinkedToLocation().getDssPath();
-                    DSSPathname pathName = new DSSPathname(dssPath);
-                    String inputEPart = pathName.getEPart();
-                    TimeSeriesContainer tsc = ReadTimeSeries(dssFilePath,dssPath,true);
-                    if(tsc==null)return Double.NaN;
-                    if(oimpl.getName().endsWith("max")){
-                        if(oimpl.getName().endsWith("Flow max")){
-                            double d  = tsc.maxmimumValue();
-                            return d;//Collections.max(Arrays.asList(ArrayUtils.toObject(tsc.values)));
-                        }else{
-                            if(oimpl.getName().contains("30 Day")){
-                                return ComputeDurationMax(tsc,30, true, inputEPart);
-                            }else{
-                                return ComputeDurationMax(tsc,1, true, inputEPart);//1 day duration
-                            }
-                        }
-                        
-                    }else{
-                        return ComputeTotal(tsc);
-                    }                    
-                }
-
-            }
-        }
-        return Double.NaN;
-    }
     @Override
     public boolean cancelCompute() {
         return false;
@@ -430,5 +392,39 @@ public class DurationAlternative extends SelfContainedPluginAlt{
         }else{
             return false;
         }
+    }
+
+    boolean computeOutputVariables(List<OutputVariable> list) {
+        //we could sort into groups by datalocations to minimize reads.
+        hec2.wat.model.ComputeOptions wco = (hec2.wat.model.ComputeOptions)_computeOptions;
+        String dssFilePath = wco.getDssFilename();
+        for(OutputVariable o : list){
+            OutputVariableImpl oimpl = (OutputVariableImpl)o;
+            for(DurationOutputVariable d: _outputVariables){
+                if(d.compareToName(oimpl.getName())){
+                    String dssPath = d.getLocation().getLinkedToLocation().getDssPath();
+                    DSSPathname pathName = new DSSPathname(dssPath);
+                    String inputEPart = pathName.getEPart();
+                    TimeSeriesContainer tsc = ReadTimeSeries(dssFilePath,dssPath,true);
+                    if(tsc==null){
+                        oimpl.setValue(Double.NaN);
+                        continue;
+                    }
+                    switch (d.getComputeType()){
+                        case DurationMax:
+                            oimpl.setValue(ComputeDurationMax(tsc,d.getDuration(),d.durationInDays(),inputEPart));
+                        case MinValueInMaxWindow:
+                            oimpl.setValue(ComputeMinimumForMaximumWindow(tsc,d.getDuration(),d.durationInDays(),inputEPart));
+                        case DurationTotal:
+                            oimpl.setValue(ComputeTotal(tsc));
+                        case TimeStepsOverThreshold:
+                            oimpl.setValue(Double.NaN);//not implemented yet.
+                        default:
+                            oimpl.setValue(Double.NaN);
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

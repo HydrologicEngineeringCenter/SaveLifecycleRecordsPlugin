@@ -5,6 +5,7 @@
  */
 package durationplugin;
 
+import hec.data.Parameter;
 import hec.model.OutputVariable;
 import hec2.model.DataLocation;
 import hec2.wat.model.tracking.OutputVariableImpl;
@@ -39,38 +40,42 @@ public class DurationOutputVariable{
         return _outputVariable;
     }
     public DurationOutputVariable(DataLocation location, Integer duration, boolean durationInDays, DurationComputeTypes computeType){
+        _location = location;
+        _duration = duration;
+        _durationInDays = durationInDays;
+        _computeType = computeType;
         //initailize the output variable
         _outputVariable = new OutputVariableImpl();
-        //            DataLocation tl = loc;
-//            OutputVariableImpl output = new OutputVariableImpl();
-//            output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + getName() + " " + 1 + " Day volume duration max" );
-//            output.setDescription("Duration Plugin Volume Duration Max for " + getName());
-//            if(loc.getParameter().equals("Flow")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Inflow")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//            }else if(loc.getParameter().equals("Flow-Unreg")){
-//                output.setParamId(Parameter.PARAMID_FLOW);
-//                output.setName(loc.getName() + " - " + loc.getParameter() +  " - " + getName() + " Unregulated Flow max" );
-//                output.setDescription("Duration Plugin Max Unregulated Flow for " + getName());
-//            }
-//            else{
-//                output.setParamId(Parameter.PARAMID_PRECIP);
-//            }
-//            
-//            if(tl.getLinkedToLocation().getParameter().equals("Stage")){
-//                //dont accumulate
-//                output.setParamId(Parameter.PARAMID_STAGE);
-//                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + getName() + " " + 1 + " Day average - max" );
-//                output.setDescription("Duration Plugin Max Average Stage for " + getName());
-//            }else if(tl.getLinkedToLocation().getParameter().equals("Temp")){
-//                //dont accumulate
-//                output.setParamId(Parameter.PARAMID_TEMP);
-//                output.setName(loc.getName() + " - " + loc.getParameter() + " - " + getName() + " " + 1 + " Day average - max" );
-//                output.setDescription("Duration Plugin Max Average Temperature for " + getName());
-//            }
-//            else{
-//            }
+        ((OutputVariableImpl)_outputVariable).setName(createName());
+        ((OutputVariableImpl)_outputVariable).setDescription(createDescription());
+        if(_location.getParameter().equals("Flow")){
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.PARAMID_FLOW);
+        }else if(_location.getParameter().equals("FLOW-IN")){
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.PARAMID_FLOW);
+        }else if(_location.getParameter().equals("Flow-Unreg")){
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.PARAMID_FLOW);
+        }else if(_location.getParameter().equals("FLOW-OUT")){
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.PARAMID_FLOW);
+        }else if(_location.getParameter().equals("ELEV")){
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.PARAMID_ELEV);
+        }else{
+            ((OutputVariableImpl)_outputVariable).setParamId(Parameter.UNDEF_PARAMETER_ID);
+        }
+    }
+    public boolean compareToName(String name){
+        return createName().equals(name);
+    }
+    private String createName(){
+        String hoursOrDays = "Day";
+        if(!durationInDays()){hoursOrDays = "Hour";}
+        String computeId = getDuration() + " " + hoursOrDays + " " + getComputeType();
+        return getLocation().getName() + " - " + getLocation().getParameter() +  " - " + computeId;
+    }
+    private String createDescription(){
+        String hoursOrDays = "Day";
+        if(!durationInDays()){hoursOrDays = "Hour";}
+        String computeId = getDuration() + " " + hoursOrDays + " " + getComputeType();
+        return computeId + " for " + getLocation().getName() + " and parameter type: " + getLocation().getParameter();
     }
     public Element writeToXML(){
         Element ele = new Element("DurationOutputVariable");
