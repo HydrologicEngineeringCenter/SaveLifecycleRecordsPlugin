@@ -15,7 +15,7 @@ Here is an example of the file contents for a study with two input locations and
     </DataLocation>
   </DataLocations>
   <OutputVariables>
-    <DataLocation Name="Folsom-Pool" Parameter="ELEV">MinValueInMaxWindow
+    <DataLocation Name="Folsom-Pool" Parameter="ELEV">
       <DurationOutputVariable Duration="3" DurationValueRepresentsDays="false" ComputeType="MinValueInMaxWindow"/>
 	  <DurationOutputVariable Duration="6" DurationValueRepresentsDays="false" ComputeType="MinValueInMaxWindow"/>
 	  <DurationOutputVariable Duration="12" DurationValueRepresentsDays="false" ComputeType="MinValueInMaxWindow"/>
