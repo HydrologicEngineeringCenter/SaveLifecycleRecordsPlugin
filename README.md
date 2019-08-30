@@ -4,6 +4,7 @@ A plugin developed to evaluate duration maximums. This project was forked from H
 
 Here is an example of the file contents for a study with two input locations and 9 output locations each:
 
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <DurationAlternative Name="test" Desc="">
   <DataLocations>
@@ -39,3 +40,4 @@ Here is an example of the file contents for a study with two input locations and
 	</DataLocation>
   </OutputVariables>
 </DurationAlternative>
+```
