@@ -63,8 +63,13 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                     locationElement.setAttribute("Parameter", loc.getParameter());
                     for(DurationOutputVariable d : _outputVariables){
                         //add to the element.
-                        locationElement.addContent(d.writeToXML());
+                        if(d.getLocation().getName().equals(loc.getName())){
+                            if(d.getLocation().getParameter().equals(loc.getParameter())){
+                                locationElement.addContent(d.writeToXML());
+                            }
+                        }   
                     }
+                    outputVariables.addContent(locationElement);
                 }
             }
             root.addContent(outputVariables);
