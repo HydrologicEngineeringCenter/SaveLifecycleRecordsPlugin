@@ -411,7 +411,7 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                     String dssPath = d.getLocation().getLinkedToLocation().getDssPath();
                     DSSPathname pathName = new DSSPathname(dssPath);
                     String inputEPart = pathName.getEPart();
-                    TimeSeriesContainer tsc = ReadTimeSeries(dssFilePath,dssPath,true);
+                    TimeSeriesContainer tsc = ReadTimeSeries(dssFilePath,dssPath,wco.isFrmCompute());
                     if(tsc==null){
                         oimpl.setValue(Double.NaN);
                         continue;
@@ -419,12 +419,16 @@ public class DurationAlternative extends SelfContainedPluginAlt{
                     switch (d.getComputeType()){
                         case DurationMax:
                             oimpl.setValue(ComputeDurationMax(tsc,d.getDuration(),d.durationInDays(),inputEPart));
+                            break;
                         case MinValueInMaxWindow:
                             oimpl.setValue(ComputeMinimumForMaximumWindow(tsc,d.getDuration(),d.durationInDays(),inputEPart));
+                            break;
                         case DurationTotal:
                             oimpl.setValue(ComputeTotal(tsc));
+                            break;
                         case TimeStepsOverThreshold:
                             oimpl.setValue(Double.NaN);//not implemented yet.
+                            break;
                         default:
                             oimpl.setValue(Double.NaN);
                     }

@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/Examples/DurationPlugin/src/durationplugin/DurationComputeTypes.java</file>
             <file>file:/C:/Examples/DurationPlugin/src/durationplugin/DurationOutputVariable.java</file>
+            <file>file:/C:/Examples/DurationPlugin/src/durationplugin/IOutputVariable.java</file>
             <file>file:/C:/Examples/DurationPlugin/src/durationplugin/DurationPlugin.java</file>
             <file>file:/C:/Examples/DurationPlugin/src/durationplugin/DurationAlternative.java</file>
         </group>
