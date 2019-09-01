@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package durationplugin;
+package savelifecyclerecordsplugin;
 import com.rma.factories.NewObjectFactory;
 import com.rma.factories.AbstractNewObjectFactory;
 import com.rma.io.FileManagerImpl;
@@ -16,10 +16,10 @@ import javax.swing.JComponent;
  *
  * @author WatPowerUser
  */
-public class DurationAlternativeFactory extends AbstractNewObjectFactory  implements NewObjectFactory{
-    private DurationPlugin _plugin;
-    public DurationAlternativeFactory(DurationPlugin plugin){
-        super(DurationPluginI18n.getI18n(DurationPluginMessages.Bundle_Name));
+public class SaveLifecycleRecordsAlternativeFactory extends AbstractNewObjectFactory  implements NewObjectFactory{
+    private SaveLifecycleRecordsPlugin _plugin;
+    public SaveLifecycleRecordsAlternativeFactory(SaveLifecycleRecordsPlugin plugin){
+        super(SaveLifecycleRecordsPluginI18n.getI18n(SaveLifecycleRecordsPluginMessages.Bundle_Name));
         _plugin = plugin;
     }
     @Override
@@ -36,7 +36,7 @@ public class DurationAlternativeFactory extends AbstractNewObjectFactory  implem
     @Override
     public Object createObject(JComponent jc) {
         GenericNewObjectPanel panel = (GenericNewObjectPanel) jc;
-        DurationAlternative alt = new DurationAlternative();
+        SaveLifecycleRecordsAlternative alt = new SaveLifecycleRecordsAlternative();
         alt.setName(panel.getSelectedName());
         alt.setDescription(panel.getSelectedDescription());
         alt.setFile(FileManagerImpl.getFileManager().getFile(panel.getSelectedFile().getPath() + RmaFile.separator + alt.getName() + _plugin.getAltFileExtension()));
