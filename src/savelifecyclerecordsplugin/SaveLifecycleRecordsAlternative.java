@@ -28,7 +28,7 @@ import org.jdom.Element;
 public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
     private List<DataLocation> _dataLocations = new ArrayList<>();
     private String _pluginVersion;
-    private static final String DocumentRoot = "DurationAlternative";
+    private static final String DocumentRoot = "SLRPAlternative";
     private static final String AlternativeNameAttribute = "Name";
     private static final String AlternativeDescriptionAttribute = "Desc";
     private ComputeOptions _computeOptions;

@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
  * @author WatPowerUser
  */
 public class SaveLifecycleRecordsPluginI18n extends I18n{
-    public static final String BUNDLE_NAME = "durationplugin.DurationPluginProperties";
+    public static final String BUNDLE_NAME = "savelifecyclerecordsplugin.SaveLifecycleRecordsPluginProperties";
     private static final ResourceBundle SAMPLE_RESOURCE_BUNDLE;
     private ResourceBundle _resourceBundle;
     static

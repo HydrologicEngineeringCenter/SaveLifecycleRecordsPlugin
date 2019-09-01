@@ -23,10 +23,10 @@ import java.util.List;
  * @author WatPowerUser
  */
 public class SaveLifecycleRecordsPlugin extends AbstractSelfContainedWatPlugin<SaveLifecycleRecordsAlternative> implements CreatableWatPlugin  {
-    public static final String PluginName = "Duration Plugin";
+    public static final String PluginName = "Save Lifecycle Records Plugin";
     private static final String _pluginVersion = "1.0.0";
-    private static final String _pluginSubDirectory = "DurationPlugin";
-    private static final String _pluginExtension = ".dp";
+    private static final String _pluginSubDirectory = "SLRPlugin";
+    private static final String _pluginExtension = ".slrp";
     /**
      * @param args the command line arguments
      */
@@ -37,7 +37,7 @@ public class SaveLifecycleRecordsPlugin extends AbstractSelfContainedWatPlugin<S
         super();
         setName(PluginName);
         setProgramOrderItem(new ProgramOrderItem(PluginName,
-                "A plugin to compute duration maximums",
+                "A plugin to help manage lifecycle file sizes",
                 false,1,"shortname","Images/fda/wsp.png"));
         WatPluginManager.register(this);
     }

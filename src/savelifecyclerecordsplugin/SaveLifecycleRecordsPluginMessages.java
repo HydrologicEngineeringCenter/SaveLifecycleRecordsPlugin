@@ -16,9 +16,9 @@ import java.util.ResourceBundle;
 public class SaveLifecycleRecordsPluginMessages {
     public static final String Bundle_Name = SaveLifecycleRecordsPluginI18n.BUNDLE_NAME;
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(Bundle_Name);
-    public static final String Plugin_Name = "DurationPlugin.Name";
-    public static final String Plugin_Description = "DurationPlugin.Description";
-    public static final String Plugin_Short_name = "DurationPlugin.ShortName";
+    public static final String Plugin_Name = "SaveLifecycleRecordsPlugin.Name";
+    public static final String Plugin_Description = "SaveLifecycleRecordsPlugin.Description";
+    public static final String Plugin_Short_name = "SaveLifecycleRecordsPlugin.ShortName";
     private SaveLifecycleRecordsPluginMessages(){
         super();
     }
