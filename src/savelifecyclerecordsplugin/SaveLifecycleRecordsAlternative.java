@@ -7,6 +7,7 @@
 package savelifecyclerecordsplugin;
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
+import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
 import hec.heclib.dss.HecDSSDataAttributes;
 import hec.io.DSSIdentifier;
@@ -19,6 +20,7 @@ import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 import org.jdom.Document;
 import org.jdom.Element;
 /**
@@ -158,50 +160,43 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
     }
     @Override
     public boolean compute() {
+        hec2.wat.model.ComputeOptions wco = (hec2.wat.model.ComputeOptions)_computeOptions;
+        //get the lifecycle dss file.
+        String lifecycleDssPath = wco.getDssFilename();
+        //gather all dss records in the lifecycleDss file for the given data location
+        //in order for distributed computing to work, this needs to not use special files or directories.
+        //must delete unnecessary records and simply leave user selected records
+        Vector<CondensedReference> paths = DssFileManagerImpl.getDssFileManager().getCondensedCatalog(lifecycleDssPath);
+        Vector<String> pathsToDelete = new Vector<>();
+        for(CondensedReference ref : paths){
+            String[] subPaths = ref.getPathnameList();
+            for(String sP : subPaths){
+                boolean match = false;
+                for(DataLocation d : _dataLocations){
+                    //check against linked to location dss record path.
+                    String dssPath = d.getLinkedToLocation().getDssPath();
+                    DSSPathname pathName = new DSSPathname(dssPath);
+                    String InputFPart = pathName.getFPart();
+                    //in an FRA compute the F part needs to be mangled to get the correct path from the datalocation.
+                    if(wco.isFrmCompute()){
+                        int AltFLastIdx = _computeOptions.getFpart().lastIndexOf(":");
+                        if(InputFPart.contains(":")){
+                            int oldFLastIdx = InputFPart.lastIndexOf(":");
+                            pathName.setFPart(_computeOptions.getFpart().substring(0,AltFLastIdx)+ InputFPart.substring(oldFLastIdx,InputFPart.length()));
+                        }
+                    }
+                    if(pathName.getPathname().equals(sP)){
+                        match = true; 
+                    }
+                }
+                if(!match){
+                    pathsToDelete.add(sP);
+                }
+            }
+        }
+        //delete all of the non matched DssPathNames.
+        DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete);
         return true;
-    }
-    private TimeSeriesContainer ReadTimeSeries(String DssFilePath, String dssPath, boolean isFRM){
-        DSSPathname pathName = new DSSPathname(dssPath);
-        String InputFPart = pathName.getFPart();
-        if(isFRM){
-            int AltFLastIdx = _computeOptions.getFpart().lastIndexOf(":");
-            if(InputFPart.contains(":")){
-                int oldFLastIdx = InputFPart.lastIndexOf(":");
-                pathName.setFPart(_computeOptions.getFpart().substring(0,AltFLastIdx)+ InputFPart.substring(oldFLastIdx,InputFPart.length()));
-            }  
-        }
-        DSSIdentifier eventDss = new DSSIdentifier(DssFilePath,pathName.getPathname());
-        eventDss.setStartTime(_computeOptions.getRunTimeWindow().getStartTime());
-	eventDss.setEndTime(_computeOptions.getRunTimeWindow().getEndTime());
-        int type = DssFileManagerImpl.getDssFileManager().getRecordType(eventDss);
-        if((HecDSSDataAttributes.REGULAR_TIME_SERIES<=type && type < HecDSSDataAttributes.PAIRED)){
-            boolean exist = DssFileManagerImpl.getDssFileManager().exists(eventDss);
-            TimeSeriesContainer eventTsc = null;
-            if (!exist )
-            {
-                try
-                {
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            eventTsc = DssFileManagerImpl.getDssFileManager().readTS(eventDss, true);
-            if ( eventTsc != null )
-            {
-                exist = eventTsc.numberValues > 0;
-            }
-            if(exist){
-                return eventTsc;
-            }else{
-                return null;
-            }
-        }else{
-            return null;
-        }
     }
     @Override
     public boolean cancelCompute() {
