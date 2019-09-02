@@ -186,16 +186,11 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
                 boolean match = false;
                 DSSPathname subPath = new DSSPathname(sP);
                 String incomingCollectionID = subPath.getCollectionSequence();
+                //fr.addMessage(incomingCollectionID);
                 for(DataLocation d : _dataLocations){
                     //check against linked to location dss record path.
                     String dssPath = d.getLinkedToLocation().getDssPath();
                     DSSPathname pathName = new DSSPathname(dssPath);
-                    String comparableCollectionID = pathName.getCollectionSequence();
-                    
-                    if(!incomingCollectionID.equals(comparableCollectionID)){
-                        match = true;//don't delete future lifecycle data from HydrologicEventGenerators.
-                        continue;
-                    }
                     String InputFPart = pathName.getFPart();
                     //in an FRA compute the F part needs to be mangled to get the correct path from the datalocation.
                     if(wco.isFrmCompute()){
@@ -205,11 +200,19 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
                             pathName.setFPart(_computeOptions.getFpart().substring(0,AltFLastIdx)+ InputFPart.substring(oldFLastIdx,InputFPart.length()));
                         }
                     }
-                    fr.addMessage("comparing " + subPath.getPathname() + " and " + pathName.getPathname());
+                    String comparableCollectionID = pathName.getCollectionSequence();
+                    fr.addMessage(comparableCollectionID);
+                    if(!incomingCollectionID.equals(comparableCollectionID)){
+                        match = true;//don't delete future lifecycle data from HydrologicEventGenerators.
+                        continue;
+                    }else{
+                        //fr.addMessage("Collection Members Match");
+                    }
+                    //fr.addMessage("comparing " + subPath.getPathname() + " and " + pathName.getPathname());
                     
-                    if(pathName.getPathname().equals(subPath.getPathname())){
+                    if(pathName.isSamePathname(subPath.getPathname(), false)){
                         match = true; 
-                        fr.addMessage("Matching " + subPath.getPathname());
+                       // fr.addMessage("Matching " + subPath.getPathname());
                     }
                 }
                 if(!match){
@@ -221,7 +224,6 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         if(0>DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete)){
             fr.addMessage(DocumentRoot + " Alternative: " + getName() + " failed to delete all records attempted.");
         }
-       
         return true;
     }
     @Override
