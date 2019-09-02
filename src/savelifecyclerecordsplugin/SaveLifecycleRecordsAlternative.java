@@ -124,7 +124,6 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         DataLocation FolsomPool_fcast_TOC = new DataLocation(this.getModelAlt(),"fcast_TOC","State Variable");
         dlList.add(FolsomPool_fcast_TOC);
 
-        
         _dataLocations = dlList;
 	return dlList; 
     }
@@ -186,7 +185,6 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
                 boolean match = false;
                 DSSPathname subPath = new DSSPathname(sP);
                 String incomingCollectionID = subPath.getCollectionSequence();
-                //fr.addMessage(incomingCollectionID);
                 for(DataLocation d : _dataLocations){
                     //check against linked to location dss record path.
                     String dssPath = d.getLinkedToLocation().getDssPath();
@@ -201,18 +199,13 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
                         }
                     }
                     String comparableCollectionID = pathName.getCollectionSequence();
-                    fr.addMessage(comparableCollectionID);
                     if(!incomingCollectionID.equals(comparableCollectionID)){
                         match = true;//don't delete future lifecycle data from HydrologicEventGenerators.
-                        continue;
                     }else{
-                        //fr.addMessage("Collection Members Match");
-                    }
-                    //fr.addMessage("comparing " + subPath.getPathname() + " and " + pathName.getPathname());
-                    
-                    if(pathName.isSamePathname(subPath.getPathname(), false)){
+                        //collection id matches, save only targeted pathNames
+                        if(pathName.isSamePathname(subPath.getPathname(), false)){
                         match = true; 
-                       // fr.addMessage("Matching " + subPath.getPathname());
+                        }
                     }
                 }
                 if(!match){
