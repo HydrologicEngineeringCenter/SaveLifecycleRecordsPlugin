@@ -9,17 +9,11 @@ import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
 import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
-import hec.heclib.dss.HecDSSDataAttributes;
-import hec.io.DSSIdentifier;
-import hec.io.TimeSeriesContainer;
-import hec.model.OutputVariable;
 import hec2.model.DataLocation;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import hec2.wat.client.WatFrame;
-import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import org.jdom.Document;
@@ -180,6 +174,7 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         hec2.wat.model.ComputeOptions wco = (hec2.wat.model.ComputeOptions)_computeOptions;
         //get the lifecycle dss file.
         String lifecycleDssPath = wco.getDssFilename();
+        WatFrame fr = hec2.wat.WAT.getWatFrame();
         //gather all dss records in the lifecycleDss file for the given data location
         //in order for distributed computing to work, this needs to not use special files or directories.
         //must delete unnecessary records and simply leave user selected records
@@ -189,10 +184,18 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
             String[] subPaths = ref.getPathnameList();
             for(String sP : subPaths){
                 boolean match = false;
+                DSSPathname subPath = new DSSPathname(sP);
+                String incomingCollectionID = subPath.getCollectionSequence();
                 for(DataLocation d : _dataLocations){
                     //check against linked to location dss record path.
                     String dssPath = d.getLinkedToLocation().getDssPath();
                     DSSPathname pathName = new DSSPathname(dssPath);
+                    String comparableCollectionID = pathName.getCollectionSequence();
+                    
+                    if(!incomingCollectionID.equals(comparableCollectionID)){
+                        match = true;//don't delete future lifecycle data from HydrologicEventGenerators.
+                        continue;
+                    }
                     String InputFPart = pathName.getFPart();
                     //in an FRA compute the F part needs to be mangled to get the correct path from the datalocation.
                     if(wco.isFrmCompute()){
@@ -202,8 +205,11 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
                             pathName.setFPart(_computeOptions.getFpart().substring(0,AltFLastIdx)+ InputFPart.substring(oldFLastIdx,InputFPart.length()));
                         }
                     }
-                    if(pathName.getPathname().equals(sP)){
+                    fr.addMessage("comparing " + subPath.getPathname() + " and " + pathName.getPathname());
+                    
+                    if(pathName.getPathname().equals(subPath.getPathname())){
                         match = true; 
+                        fr.addMessage("Matching " + subPath.getPathname());
                     }
                 }
                 if(!match){
@@ -213,7 +219,6 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         }
         //delete all of the non matched DssPathNames.
         if(0>DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete)){
-            WatFrame fr = hec2.wat.WAT.getWatFrame();
             fr.addMessage(DocumentRoot + " Alternative: " + getName() + " failed to delete all records attempted.");
         }
        
