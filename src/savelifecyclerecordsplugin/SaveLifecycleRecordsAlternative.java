@@ -16,6 +16,7 @@ import hec.model.OutputVariable;
 import hec2.model.DataLocation;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.selfcontained.SelfContainedPluginAlt;
+import hec2.wat.client.WatFrame;
 import hec2.wat.model.tracking.OutputVariableImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +114,23 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         //pool inflows
         DataLocation FolsomPool_flowin = new DataLocation(this.getModelAlt(),"Folsom-Pool","FLOW-IN");
         dlList.add(FolsomPool_flowin);
+        
+        //pool outflows
+        DataLocation FolsomPool_flowout = new DataLocation(this.getModelAlt(),"Folsom-Pool","FLOW-OUT");
+        dlList.add(FolsomPool_flowout);
+        
+        DataLocation FolsomPool_inflow_1D = new DataLocation(this.getModelAlt(),"inflow_1D","State Variable");
+        dlList.add(FolsomPool_inflow_1D);
+        DataLocation FolsomPool_inflow_2D = new DataLocation(this.getModelAlt(),"inflow_2D","State Variable");
+        dlList.add(FolsomPool_inflow_2D);
+        DataLocation FolsomPool_inflow_3D = new DataLocation(this.getModelAlt(),"inflow_3D","State Variable");
+        dlList.add(FolsomPool_inflow_3D);
+        DataLocation FolsomPool_inflow_5D = new DataLocation(this.getModelAlt(),"inflow_5D","State Variable");
+        dlList.add(FolsomPool_inflow_5D);
+        DataLocation FolsomPool_fcast_TOC = new DataLocation(this.getModelAlt(),"fcast_TOC","State Variable");
+        dlList.add(FolsomPool_fcast_TOC);
 
+        
         _dataLocations = dlList;
 	return dlList; 
     }
@@ -195,7 +212,11 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
             }
         }
         //delete all of the non matched DssPathNames.
-        DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete);
+        if(0>DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete)){
+            WatFrame fr = hec2.wat.WAT.getWatFrame();
+            fr.addMessage(DocumentRoot + " Alternative: " + getName() + " failed to delete all records attempted.");
+        }
+       
         return true;
     }
     @Override
