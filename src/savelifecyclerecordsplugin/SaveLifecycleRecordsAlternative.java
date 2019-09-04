@@ -7,8 +7,10 @@
 package savelifecyclerecordsplugin;
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
+import com.rma.model.AbstractManager;
 import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.DSSPathname;
+import hec.heclib.dss.HecDSSUtilities;
 import hec2.model.DataLocation;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.selfcontained.SelfContainedPluginAlt;
@@ -172,8 +174,17 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
     public boolean compute() {
         hec2.wat.model.ComputeOptions wco = (hec2.wat.model.ComputeOptions)_computeOptions;
         //get the lifecycle dss file.
-        String lifecycleDssPath = wco.getDssFilename();
         WatFrame fr = hec2.wat.WAT.getWatFrame();
+        if(wco.getEventList().size()!=wco.getCurrentEventNumber()){
+             fr.addMessage("Computing Lifecycle " + wco.getCurrentEventNumber());
+            return true;
+            
+        }else{
+            fr.addMessage("Computing Lifecycle " + wco.getCurrentEventNumber() + " it is time to attempt a delete and squeeze!");
+        }
+        
+        String lifecycleDssPath = wco.getDssFilename();
+        
         //gather all dss records in the lifecycleDss file for the given data location
         //in order for distributed computing to work, this needs to not use special files or directories.
         //must delete unnecessary records and simply leave user selected records
@@ -184,27 +195,15 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
             for(String sP : subPaths){
                 boolean match = false;
                 DSSPathname subPath = new DSSPathname(sP);
-                String incomingCollectionID = subPath.getCollectionSequence();
                 for(DataLocation d : _dataLocations){
                     //check against linked to location dss record path.
                     String dssPath = d.getLinkedToLocation().getDssPath();
                     DSSPathname pathName = new DSSPathname(dssPath);
-                    String InputFPart = pathName.getFPart();
-                    //in an FRA compute the F part needs to be mangled to get the correct path from the datalocation.
-                    if(wco.isFrmCompute()){
-                        int AltFLastIdx = _computeOptions.getFpart().lastIndexOf(":");
-                        if(InputFPart.contains(":")){
-                            int oldFLastIdx = InputFPart.lastIndexOf(":");
-                            pathName.setFPart(_computeOptions.getFpart().substring(0,AltFLastIdx)+ InputFPart.substring(oldFLastIdx,InputFPart.length()));
-                        }
-                    }
-                    String comparableCollectionID = pathName.getCollectionSequence();
-                    if(!incomingCollectionID.equals(comparableCollectionID)){
-                        match = true;//don't delete future lifecycle data from HydrologicEventGenerators.
-                    }else{
-                        //collection id matches, save only targeted pathNames
-                        if(pathName.isSamePathname(subPath.getPathname(), false)){
-                        match = true; 
+                    if(pathName.aPart().toLowerCase().equals(subPath.aPart().toLowerCase())){
+                        if(pathName.bPart().toLowerCase().equals(subPath.bPart().toLowerCase())){
+                            if(pathName.cPart().toLowerCase().equals(subPath.cPart().toLowerCase())){
+                                match = true;//cause if the a b and c parts (to lower) match. it must match.
+                            }
                         }
                     }
                 }
@@ -216,6 +215,12 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         //delete all of the non matched DssPathNames.
         if(0>DssFileManagerImpl.getDssFileManager().delete(lifecycleDssPath, pathsToDelete)){
             fr.addMessage(DocumentRoot + " Alternative: " + getName() + " failed to delete all records attempted.");
+        }else{
+            HecDSSUtilities dss = new HecDSSUtilities();
+            dss.setDSSFileName(lifecycleDssPath);
+            if(0>dss.squeeze()){
+                fr.addMessage("Squeeze Failed.");
+            }
         }
         return true;
     }
