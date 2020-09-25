@@ -19,8 +19,8 @@ Here is what I did to setup the SaveLifecycleRecordsPlugin in the WAT. Assumes y
 7. Finished .slrp file will look like this:
 ![image3](https://discourse.hecdev.net/uploads/default/optimized/1X/613d397e077c33bc34bc3bdc0ab24264003b3ab8_2_1035x171.png)
 NOTE: If created without the WAT Model Linking Editor, here is an alternative template to follow.
-*In primary DataLocation, Model is DSS File instead of URC-Base PA_HIPP
-*In DownStreamLocation DataLocation, the ModelAlternative line is not needed and has been deleted
+- In primary DataLocation, Model is DSS File instead of URC-Base PA_HIPP
+- In DownStreamLocation DataLocation, the ModelAlternative line is not needed and has been deleted
 ![image4](https://discourse.hecdev.net/uploads/default/optimized/1X/6096c4f0598b22adb2613b4d5a3e06e4eb0aaf79_2_1035x165.png)
 
 8. Model is ready to run now.
