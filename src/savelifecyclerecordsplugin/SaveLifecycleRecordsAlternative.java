@@ -176,11 +176,11 @@ public class SaveLifecycleRecordsAlternative extends SelfContainedPluginAlt{
         //get the lifecycle dss file.
         WatFrame fr = hec2.wat.WAT.getWatFrame();
         if(wco.getEventList().size()!=wco.getCurrentEventNumber()){
-             fr.addMessage("Computing Lifecycle " + wco.getCurrentEventNumber());
+             fr.addMessage("Computing Lifecycle " + wco.getCurrentLifecycleNumber() + ", Event " + wco.getCurrentEventNumber());
             return true;
             
         }else{
-            fr.addMessage("Computing Lifecycle " + wco.getCurrentEventNumber() + " it is time to attempt a delete and squeeze!");
+            fr.addMessage("Computing Lifecycle " + wco.getCurrentLifecycleNumber() + ", Event " + wco.getCurrentEventNumber() + " it is time to attempt a delete and squeeze!");
         }
         
         String lifecycleDssPath = wco.getDssFilename();
